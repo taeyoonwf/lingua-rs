@@ -275,7 +275,7 @@ impl LanguageDetectorBuilder {
 impl LanguageDetector {
     /// Detects the language of given input text.
     /// If the language cannot be reliably detected, `undefined` is returned.
-    pub fn detectLanguageOf(&self, text: &str) -> Option<String> {
+    pub fn detectLanguageOf(&self, text: &js_sys::JsString) -> Option<String> {
         match self.detector.detect_language_of(text) {
             Some(language) => Some(language.to_string()),
             None => None,
@@ -317,7 +317,7 @@ impl LanguageDetector {
     /// sum to 1.0. If the language is unambiguously identified by the rule engine, the value
     /// 1.0 will always be returned for this language. The other languages will receive a value
     /// of 0.0.
-    pub fn computeLanguageConfidenceValues(&self, text: &str) -> JsValue {
+    pub fn computeLanguageConfidenceValues(&self, text: &js_sys::JsString) -> JsValue {
         let confidence_values = self
             .detector
             .compute_language_confidence_values(text)
@@ -338,7 +338,7 @@ impl LanguageDetector {
     /// unambiguously identified by the rule engine, the value 1.0 will always be returned.
     /// If the given language is not supported by this detector instance, the value 0.0 will
     /// always be returned.
-    pub fn computeLanguageConfidence(&self, text: &str, language: &str) -> Result<f64, JsValue> {
+    pub fn computeLanguageConfidence(&self, text: &js_sys::JsString, language: &str) -> Result<f64, JsValue> {
         match Language::from_str(language) {
             Ok(lang) => Ok(self.detector.compute_language_confidence(text, lang)),
             Err(_) => Err(JsValue::from(format!(
